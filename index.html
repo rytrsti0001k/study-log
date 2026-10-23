@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STUDY LOG">
+<meta name="theme-color" content="#0B111E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>STUDY LOG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9ECF2;--card:#FFFFFF;--ink:#0E1424;--sub:#545D70;--line:#E1E5EC;
+  --deep:#0B111E;--navy:#0F1626;--navy2:#182136;--navy3:#263049;
+  --blue:#3466F6;--blue-d:#1F48C9;--blue-s:#E3E9FB;--blue-l:#A9BBF8;
+  --amber:#F2A33A;--amber-d:#A35F00;--amber-line:#D9861C;--muted:#9AA6BD;--red:#B0413E;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+  --shadow:0 1px 2px rgba(14,20,36,.06),0 14px 30px -14px rgba(14,20,36,.28);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;touch-action:manipulation;overscroll-behavior-y:none}
+body.dark{background:var(--deep)}
+button,input,select,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer}
+.n{font-family:'Barlow Condensed','Noto Sans JP',sans-serif;font-variant-numeric:tabular-nums}
+.en{font-family:'Barlow',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;color:var(--blue)}
+.hidden{display:none!important}
+#app{max-width:520px;margin:0 auto;min-height:100vh;position:relative}
+.topbar{background:var(--deep);color:#fff;padding:calc(var(--sat) + 16px) 20px 16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.topbar .date{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:.08em;color:var(--muted)}
+.topbar h1{margin:2px 0 0;font-size:26px;font-weight:700;letter-spacing:.02em}
+.topbar .note{font-size:11px;color:var(--muted);padding-bottom:5px;text-align:right}
+.page{padding:16px 16px calc(112px + var(--sab));display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border-radius:12px;box-shadow:var(--shadow)}
+.sec{display:flex;align-items:baseline;gap:8px}
+.sec b{font-size:15px;font-weight:700}
+.lbl{display:flex;align-items:baseline;gap:8px;font-size:13px;font-weight:700;padding:0 4px}
+.muted{color:var(--sub)}
+.demo{background:#FFF4E2;color:#7A4600;font-size:12px;padding:8px 12px;border-radius:8px;border:1px solid #F3D29F;line-height:1.5}
+/* hero */
+.hero{position:relative;overflow:hidden;background:var(--navy);border-radius:14px;padding:20px;color:#fff;display:flex;flex-direction:column;gap:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 24px 44px -18px rgba(15,22,38,.7)}
+.hero .dia{position:absolute;border:1px solid rgba(255,255,255,.07);transform:rotate(45deg);pointer-events:none}
+.hero>*{position:relative}
+.hero .dia{position:absolute}
+.exam-chip{display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid rgba(242,163,58,.55);border-radius:4px;color:var(--amber);font-size:11.5px;font-weight:700;background:none}
+.big{display:flex;align-items:baseline;gap:4px}
+.big .n{font-size:84px;font-weight:600;line-height:.85}
+.big .u{font-size:15px;font-weight:700;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:8px}
+.stats>div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;min-width:0}
+.stats>div+div{border-left:1px solid rgba(255,255,255,.08)}
+.stats .k{font-size:11px;color:var(--muted)}
+.stats .v{font-size:11px;color:var(--muted);white-space:nowrap}
+.stats .v .n{font-size:24px;font-weight:600;color:#fff}
+.btn2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;height:48px;border-radius:8px;border:none;font-size:15px;font-weight:700;text-decoration:none}
+.btn.primary{background:var(--blue);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 22px -8px rgba(52,102,246,.85)}
+.btn2 .btn{font-size:14px}
+.btn.ghost{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.2);color:#fff}
+.btn.block{width:100%;height:52px;font-size:16px}
+.btn.light{background:#fff;border:1px solid #D3D9E3;color:var(--ink)}
+.btn.danger{background:#fff;border:1px solid #E7C4C3;color:var(--red)}
+.streak{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding-top:14px;gap:10px}
+.sq{display:grid;grid-template-columns:repeat(14,10px);gap:3px}
+.sq span{height:10px;background:var(--navy3)}
+.sq span.on{background:var(--amber)}
+.sq span.t{outline:1px solid #fff;outline-offset:1px}
+.running-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#8FA8FF}
+.running-pill i{width:7px;height:7px;border-radius:50%;background:#8FA8FF;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+/* goal */
+.gbar{position:relative;height:14px;background:var(--blue-s);border-radius:3px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(14,20,36,.12)}
+.gbar .f{height:100%;background:var(--blue);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.gbar .f.done{background:#0E9384}
+.gbar .tk{position:absolute;top:0;bottom:0;width:2px;background:#fff}
+.gscale{position:relative;height:22px;font:600 11px 'Barlow',sans-serif;color:var(--sub)}
+.gscale i{position:absolute;top:0;width:1px;height:5px;background:#9AA3B5}
+.gscale span{position:absolute;top:7px}
+.gmark{position:absolute;top:0;transform:translateX(-50%);background:var(--navy);color:#fff;font:700 12px 'Barlow',sans-serif;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.mini{position:relative;height:118px}
+.mini .bars{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));align-items:end;border-bottom:1px solid #CBD2DE}
+.mini .col{display:flex;flex-direction:column;align-items:center;gap:3px}
+.mini .col .n{font-size:13px;color:var(--sub)}
+.mini .bar{width:20px;border-radius:2px 2px 0 0;background:var(--blue-l)}
+.mini .bar.hit{background:var(--blue)}
+.mini .bar.today{outline:2px solid var(--navy);outline-offset:1px}
+.mini .bar.none{height:2px!important;background:#DCE1EA;border-radius:0}
+.guide{position:absolute;left:0;right:0;border-top:1.5px dashed var(--amber-line);z-index:1}
+.guide-l{position:absolute;right:0;font-size:10.5px;font-weight:700;color:var(--amber-d);background:#fff;padding-left:4px;z-index:1}
+.dlabels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));text-align:center;font-size:11px;color:var(--sub)}
+.dlabels .t{color:var(--ink);font-weight:700}
+.legend{display:flex;gap:14px;justify-content:flex-end;font-size:11px;color:var(--sub);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;display:inline-block}
+/* logs */
+.logrow{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;border:none;border-top:1px solid var(--line);background:none;text-align:left}
+.logrow .cb{width:4px;height:38px;flex:none}
+.logrow .tx{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.logrow .tx b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.logrow .tx span{font-size:12px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.logrow .tm{font-size:12px;color:var(--sub);white-space:nowrap}
+.logrow .tm .n{font-size:24px;font-weight:700;color:var(--ink)}
+.empty{padding:16px;font-size:13px;color:var(--sub);border-top:1px solid var(--line)}
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal .wd{text-align:center;font-size:10.5px;font-weight:700;color:var(--sub)}
+.cal .wd.sa{color:#3D5FA0}.cal .wd.su{color:var(--red)}
+.cal .d{height:30px;border-radius:4px;border:none;display:flex;align-items:center;justify-content:center;font:600 12px 'Barlow',sans-serif;padding:0;background:#EEF0F4;color:var(--ink);position:relative}
+.cal .d.l1{background:#D6E0FD}.cal .d.l2{background:#9DB4FA}.cal .d.l3{background:#5A82F8;color:#fff}.cal .d.l4{background:#1F44B8;color:#fff}
+.cal .d.fu{background:transparent;color:#9AA3B5}
+.cal .d.ex{box-shadow:inset 0 0 0 2px var(--amber)}
+.cal .d.sel{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--navy)}
+.cal .d.sel.ex{box-shadow:inset 0 0 0 2px var(--amber),0 0 0 2px #fff,0 0 0 3.5px var(--navy)}
+.heat{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--sub)}
+.heat i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.iconbtn{width:36px;height:36px;border:none;background:none;color:var(--ink);display:flex;align-items:center;justify-content:center;border-radius:6px;padding:0}
+.iconbtn:disabled{color:#B5BCC9}
+.iconbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* chart */
+.segs{display:flex;gap:4px;padding:3px;border-radius:8px;background:#EEF0F4;box-shadow:inset 0 1px 2px rgba(14,20,36,.1)}
+.segs button{flex:1;height:32px;border:none;border-radius:6px;background:transparent;font-size:13px;color:var(--sub);font-weight:500}
+.segs button.on{background:var(--navy);color:#fff;font-weight:700}
+.segs.sm button{height:28px;font-size:12px;padding:0 8px;flex:none;white-space:nowrap}
+.segs.light{background:#DDE2EA}
+.segs.light button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(14,20,36,.16)}
+.chart{position:relative}
+.chart .bars{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;gap:var(--gap,8px);border-bottom:1px solid #CBD2DE}
+.chart .bc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;gap:3px}
+.chart .bc .v{font-size:12px;color:var(--sub)}
+.chart .stack{width:100%;max-width:24px;display:flex;flex-direction:column-reverse;border-radius:2px 2px 0 0;overflow:hidden}
+.chart .stack i{display:block;width:100%}
+.chart .bc.today .stack{outline:2px solid var(--navy);outline-offset:1px}
+.xl{display:flex;gap:var(--gap,8px);font-size:11px;color:var(--sub);text-align:center}
+.xl span{flex:1;min-width:0;white-space:nowrap}
+.xl span.t{color:var(--ink);font-weight:700}
+.bd{display:flex;flex-direction:column;gap:5px}
+.bd .h{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+.bd .h b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd .tr{height:8px;border-radius:2px;background:#EEF0F4}
+.bd .tr i{display:block;height:100%;border-radius:2px}
+/* nav */
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:520px;height:calc(64px + var(--sab));padding:0 12px var(--sab);background:rgba(255,255,255,.96);border-top:1px solid #DCE1EA;box-shadow:0 -10px 24px -14px rgba(14,20,36,.25);display:flex;justify-content:space-around;z-index:20;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.nav button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;width:72px;padding-top:9px;border:none;background:none;color:#5B6478;font-size:10.5px;font-weight:500}
+.nav button.on{color:var(--blue);font-weight:700}
+.nav button.on::before{content:"";position:absolute;top:-1px;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--blue)}
+.nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav .dot{position:absolute;top:8px;right:18px;width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 2px #fff}
+body.dark .nav{background:rgba(15,22,38,.96);border-top-color:rgba(255,255,255,.08)}
+body.dark .nav button{color:var(--muted)}
+body.dark .nav button.on{color:#8FA8FF}
+body.dark .nav button.on::before{background:#8FA8FF}
+body.dark .nav .dot{box-shadow:0 0 0 2px var(--navy)}
+/* timer */
+.tpage{position:relative;overflow:hidden;min-height:100vh;color:#fff;padding:calc(var(--sat) + 16px) 20px calc(100px + var(--sab));display:flex;flex-direction:column;gap:22px}
+.tpage .dia{position:absolute;left:50%;transform:translate(-50%,-50%) rotate(45deg);pointer-events:none}
+.tsel{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;background:#151D2F;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 16px 30px -18px rgba(0,0,0,.9);color:#fff;text-align:left;width:100%}
+.ring{position:relative;width:min(300px,78vw);aspect-ratio:1;align-self:center}
+.ring svg{position:absolute;inset:0;width:100%;height:100%}
+.ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.tbtns{display:flex;align-items:center;justify-content:center;gap:28px}
+.tb{width:64px;height:64px;border-radius:32px;border:1px solid rgba(255,255,255,.18);background:#151D2F;color:#fff;font-size:12px;font-weight:700;line-height:1.2}
+.tb.main{width:88px;height:88px;border-radius:44px;border:none;background:var(--blue);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 30px -10px rgba(52,102,246,.9)}
+.tb.main.paused{background:#2A3550}
+.tb.fin{border-color:rgba(242,163,58,.6);color:var(--amber)}
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;max-width:520px;margin:0 auto}
+.sheet.anim{animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.sheet .hd{background:var(--navy);color:#fff;padding:calc(var(--sat) + 8px) 8px 8px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 10px 24px -14px rgba(15,22,38,.8)}
+.sheet .hd h2{margin:0;font-size:16px;font-weight:700;letter-spacing:.06em}
+.sheet .hd .iconbtn{color:#fff;width:44px;height:44px}
+.sheet .hd .iconbtn svg{width:22px;height:22px}
+.sheet .bd{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 24px;display:flex;flex-direction:column;gap:18px}
+.sheet .ft{background:#fff;border-top:1px solid #DCE1EA;padding:12px 16px calc(12px + var(--sab));box-shadow:0 -10px 24px -14px rgba(14,20,36,.25);display:flex;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;height:38px;padding:0 14px;border-radius:6px;border:1px solid #D3D9E3;background:#fff;color:var(--ink);font-size:14px;font-weight:500;box-shadow:0 1px 1px rgba(14,20,36,.05)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700;box-shadow:0 6px 14px -6px rgba(15,22,38,.6)}
+.chip.add{border-style:dashed;border-color:#9DB4FA;color:var(--blue-d);font-weight:700;box-shadow:none;background:transparent}
+.hint{font-size:12px;color:var(--sub);padding:0 4px}
+.row{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:0 16px;border:none;border-bottom:1px solid var(--line);background:none;text-align:left;font-size:15px}
+.row:last-child{border-bottom:none}
+.radio{width:18px;height:18px;border-radius:50%;border:1.5px solid #B5BCC9;flex:none}
+.radio.on{border:6px solid var(--blue)}
+.tin{width:70px;height:58px;border:1px solid #D3D9E3;border-radius:8px;background:#F6F7FA;text-align:center;font:600 38px 'Barlow Condensed',sans-serif;color:var(--ink);box-shadow:inset 0 2px 3px rgba(14,20,36,.08);padding:0;-moz-appearance:textfield}
+.tin::-webkit-outer-spin-button,.tin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.st{width:46px;height:46px;border-radius:8px;border:1px solid #D3D9E3;background:#fff;font:600 17px 'Barlow',sans-serif;color:var(--ink);box-shadow:0 1px 2px rgba(14,20,36,.08)}
+.qa{height:36px;border-radius:6px;border:1px solid #C9D5FB;background:#EEF2FE;font:700 14px 'Barlow',sans-serif;color:var(--blue-d)}
+.field{width:100%;height:50px;border:1px solid #D3D9E3;border-radius:10px;background:#fff;padding:0 14px;font-size:16px;color:var(--ink);box-shadow:var(--shadow)}
+textarea.field{height:auto;padding:12px 14px;resize:none}
+select.field{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#545D70 50%),linear-gradient(135deg,#545D70 50%,transparent 50%);background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;background-size:5px 5px;background-repeat:no-repeat}
+/* popup */
+.ov{position:fixed;inset:0;z-index:50;background:rgba(8,12,22,.62);display:flex;align-items:center;justify-content:center;padding:calc(var(--sat) + 16px) 20px calc(var(--sab) + 16px)}
+.ov.anim{animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.pop{width:100%;max-width:400px;max-height:100%;overflow-y:auto;border-radius:14px;background:#fff;box-shadow:0 40px 70px -20px rgba(0,0,0,.75)}
+.pop .top{position:relative;overflow:hidden;background:var(--navy);color:#fff;padding:24px 22px 22px;display:flex;flex-direction:column;gap:10px}
+.pop .top>*{position:relative}
+.pop .top .dia{position:absolute;transform:rotate(45deg);pointer-events:none}
+/* library */
+.cathd{display:flex;align-items:center;gap:10px;padding:8px 4px 8px 16px;background:var(--navy);color:#fff;border-radius:12px 12px 0 0}
+.cathd.closed{border-radius:12px}
+.cathd .iconbtn{color:#C5CEDF}
+.badge{font-size:10.5px;font-weight:700;color:#8FA8FF;border:1px solid rgba(143,168,255,.5);padding:1px 6px;border-radius:3px;margin-left:6px}
+.tg{display:flex;flex-direction:column;gap:8px;padding:10px 6px 12px 10px;border-bottom:1px solid var(--line)}
+.tgh{display:flex;align-items:center;gap:6px}
+.tgh button.nm{flex:1;border:none;background:none;text-align:left;font-size:14px;font-weight:700;padding:6px 0;color:var(--ink)}
+.sub{display:inline-flex;align-items:center;gap:2px;height:32px;padding:0 2px 0 11px;border-radius:5px;background:#EEF0F4;border:1px solid #DCE1EA;font-size:13px}
+.sub button{width:28px;height:28px;border:none;background:none;color:#5B6478;font-size:15px;padding:0}
+.addsub{display:inline-flex;align-items:center;height:32px;padding:0 11px;border-radius:5px;border:1px dashed #9DB4FA;background:none;font-size:13px;font-weight:700;color:var(--blue-d)}
+.addln{display:flex;align-items:center;gap:8px;min-height:46px;padding:0 10px;border:none;background:none;font-size:14px;font-weight:700;color:var(--blue);text-align:left}
+.addbig{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:10px;border:1.5px dashed #9DB4FA;background:rgba(255,255,255,.4);font-size:15px;font-weight:700;color:var(--blue-d)}
+.lv{font:700 9.5px 'Barlow',sans-serif;letter-spacing:.14em;color:var(--sub);border:1px solid #CBD2DE;border-radius:3px;padding:1px 5px}
+.rw{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:0 16px;border:none;border-bottom:1px solid var(--line);background:none;font-size:14px;width:100%;text-align:left;color:var(--ink)}
+.rw:last-child{border-bottom:none}
+.switch{position:relative;width:52px;height:32px;border-radius:16px;background:#C9CFDA;border:none;flex:none;transition:background .15s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:left .15s}
+.switch.on{background:var(--blue)}
+.switch.on::after{left:23px}
+.toast{position:fixed;left:50%;bottom:calc(84px + var(--sab));transform:translateX(-50%);background:var(--navy);color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:8px;z-index:60;box-shadow:0 10px 24px -8px rgba(0,0,0,.5);animation:fade .2s;max-width:90%}
+/* login */
+.login{min-height:100vh;background:var(--deep);color:#fff;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:calc(var(--sat) + 24px) 28px calc(var(--sab) + 24px);max-width:520px;margin:0 auto}
+.login .field{background:#151D2F;border-color:rgba(255,255,255,.12);color:#fff;box-shadow:none}
+.login .err{color:#FF9B98;font-size:13px;min-height:18px}
+.loading{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--deep);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div id="app"><div class="loading">読み込み中…</div></div>
+<script type="module">
+/* =========================================================
+   STUDY LOG — 勉強記録アプリ
+   Firebase の設定値を下の FIREBASE_CONFIG に貼り付けてください。
+   apiKey が "YOUR_" で始まる間は、この端末だけに保存するデモモードで動きます。
+   ========================================================= */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAi_Vos9qdsL5Jz7IfbSM7q9XqMOR2d4QY",
+  authDomain: "study-log-4f3b3.firebaseapp.com",
+  projectId: "study-log-4f3b3",
+  storageBucket: "study-log-4f3b3.firebasestorage.app",
+  messagingSenderId: "333620416890",
+  appId: "1:333620416890:web:09f589a8974249983246c3"
+};
+const FB_VER = '10.12.2';
+const DEMO = String(FIREBASE_CONFIG.apiKey).startsWith('YOUR_');
+const DAY_SHIFT_H = 4;            // 午前4:00で日付が切り替わる
+const PALETTE = ['#3466F6','#0E9384','#E08A00','#8B5CF6','#D9467A','#0EA5E9','#65A30D','#B45309'];
+const WD = ['月','火','水','木','金','土','日'];
+
+/* ---------- 小道具 ---------- */
+const $app = document.getElementById('app');
+const p2 = v => String(v).padStart(2, '0');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const ymd = d => d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return ymd(d); };
+const diffDays = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
+const studyDate = (d = new Date()) => ymd(new Date(d.getTime() - DAY_SHIFT_H * 3600e3));
+const weekStart = s => { const d = parse(s); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return ymd(d); };
+const wdOf = s => WD[(parse(s).getDay() + 6) % 7];
+const daysInMonth = ym => { const [y, m] = ym.split('-').map(Number); return new Date(y, m, 0).getDate(); };
+const shiftMonth = (ym, n) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + n, 1); return d.getFullYear() + '-' + p2(d.getMonth() + 1); };
+const hm = min => ({ h: Math.floor(min / 60), m: p2(min % 60) });
+const hmStr = min => { const t = hm(min); return t.h + ':' + t.m; };
+const hmJa = min => { const t = hm(min); return t.h + '時間' + t.m + '分'; };
+const sum = a => a.reduce((x, y) => x + y, 0);
+
+const I = {
+  chart: '<svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M7 16v-5M12 16V7M17 16v-8"/></svg>',
+  watch: '<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>',
+  book: '<svg viewBox="0 0 24 24"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>',
+  flag: '<svg viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  l: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
+  r: '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
+  up: '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',
+  pen: '<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>',
+  trash: '<svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>',
+  flame: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#F2A33A" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5c.8 3.6 5.5 5.4 5.5 10.7a5.5 5.5 0 0 1-11 0c0-2.3 1-3.9 2.3-5.1.2 1.9 1.1 3 2.4 3 0-3.2-.6-5.9.8-8.6z"/></svg>',
+  cal: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#545D70" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>'
+};
+const ic = (k, sz) => sz ? I[k].replace('<svg ', `<svg width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" `) : I[k];
+
+function defaultTaxonomy() {
+  const t = (name, tasks) => ({ id: uid(), name, tasks: tasks.map(n => ({ id: uid(), name: n })) });
+  return { categories: [{ id: 'cat_en', name: '英語', color: '#3466F6', isDefault: true, targets: [
+    t('英検', ['リスニング', 'リーディング', 'ライティング', 'スピーキング', '単語', '文法']),
+    t('TOEIC', ['リスニング', 'リーディング', '単語', '文法']),
+    t('TOEFL', ['リスニング', 'リーディング', 'ライティング', 'スピーキング']),
+    t('IELTS', ['リスニング', 'リーディング', 'ライティング', 'スピーキング']),
+    t('英会話', ['フレーズ', '発音', 'オンライン英会話'])
+  ] }] };
+}
+const DEFAULT_SETTINGS = { goals: {}, goalDefault: 600, popup: true, hidePopupDate: '' };
+
+/* ---------- 状態 ---------- */
+const S = {
+  user: null, email: '',
+  logs: [], materials: [], exams: [],
+  settings: clone(DEFAULT_SETTINGS), taxonomy: null,
+  timer: { running: false, startedAt: 0, accum: 0, sel: null },
+  loaded: { logs: false, materials: false, exams: false, settings: false, taxonomy: false },
+  ui: { tab: 'report', calMonth: null, calSel: null, chartMode: 'week', chartOff: 0, bdLevel: 'cat', libTab: 'cat', open: { cat_en: true }, sheet: null, popup: false, popupChecked: false }
+};
+
+/* ---------- 保存先（Firebase / デモ） ---------- */
+let DB = null;
+const LocalDB = (() => {
+  const KEY = 'studylog-demo-v1';
+  let data; try { data = JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { data = null; }
+  if (!data) data = { cols: { logs: {}, materials: {}, exams: {} }, docs: {} };
+  const ws = { col: {}, doc: {} };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} };
+  const emitCol = n => (ws.col[n] || []).forEach(cb => cb(Object.entries(data.cols[n] || {}).map(([id, v]) => ({ id, ...v }))));
+  const emitDoc = n => (ws.doc[n] || []).forEach(cb => cb(data.docs[n] ? clone(data.docs[n]) : null, false));
+  return {
+    watchCol(n, cb) { (ws.col[n] = ws.col[n] || []).push(cb); setTimeout(() => emitCol(n)); },
+    watchDoc(n, cb) { (ws.doc[n] = ws.doc[n] || []).push(cb); setTimeout(() => emitDoc(n)); },
+    async put(n, id, v) { (data.cols[n] = data.cols[n] || {})[id] = clone(v); save(); emitCol(n); },
+    async del(n, id) { delete data.cols[n][id]; save(); emitCol(n); },
+    async putDoc(n, v) { data.docs[n] = clone(v); save(); emitDoc(n); },
+    async batchPut(n, items) { items.forEach(it => { const { id, ...v } = it; (data.cols[n] = data.cols[n] || {})[id] = clone(v); }); save(); emitCol(n); },
+    async wipe() { data = { cols: { logs: {}, materials: {}, exams: {} }, docs: {} }; save(); ['logs', 'materials', 'exams'].forEach(emitCol); ['settings', 'taxonomy', 'timer'].forEach(emitDoc); }
+  };
+})();
+
+async function FirebaseDB() {
+  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+  const [appM, authM, fsM] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
+  const app = appM.initializeApp(FIREBASE_CONFIG);
+  let db;
+  try { db = fsM.initializeFirestore(app, { localCache: fsM.persistentLocalCache({ tabManager: fsM.persistentMultipleTabManager() }) }); }
+  catch (e) { db = fsM.getFirestore(app); }
+  const auth = authM.getAuth(app);
+  const subs = [];
+  const u = () => auth.currentUser.uid;
+  const clean = v => JSON.parse(JSON.stringify(v));
+  return {
+    auth, authM,
+    watchCol(n, cb) { subs.push(fsM.onSnapshot(fsM.collection(db, 'users', u(), n), s => cb(s.docs.map(d => ({ id: d.id, ...d.data() }))), e => console.error(e))); },
+    watchDoc(n, cb) { subs.push(fsM.onSnapshot(fsM.doc(db, 'users', u(), 'meta', n), { includeMetadataChanges: true }, s => cb(s.exists() ? s.data() : null, s.metadata.fromCache), e => console.error(e))); },
+    put(n, id, v) { return fsM.setDoc(fsM.doc(db, 'users', u(), n, id), clean(v)).catch(onErr); },
+    del(n, id) { return fsM.deleteDoc(fsM.doc(db, 'users', u(), n, id)).catch(onErr); },
+    putDoc(n, v) { return fsM.setDoc(fsM.doc(db, 'users', u(), 'meta', n), clean(v)).catch(onErr); },
+    async batchPut(n, items) {
+      for (let i = 0; i < items.length; i += 400) {
+        const b = fsM.writeBatch(db);
+        items.slice(i, i + 400).forEach(it => { const { id, ...v } = it; b.set(fsM.doc(db, 'users', u(), n, id), clean(v)); });
+        await b.commit().catch(onErr);
+      }
+    },
+    stop() { subs.splice(0).forEach(f => f()); }
+  };
+}
+function onErr(e) { console.error(e); toast('保存に失敗しました：' + (e.code || e.message)); }
+
+function startSync() {
+  ['logs', 'materials', 'exams'].forEach(n => DB.watchCol(n, list => { S[n] = list; S.loaded[n] = true; afterLoad(); render(); }));
+  DB.watchDoc('settings', (v, fromCache) => {
+    if (v) S.settings = { ...clone(DEFAULT_SETTINGS), ...v };
+    else if (!fromCache) DB.putDoc('settings', S.settings);
+    if (v || !fromCache) { S.loaded.settings = true; afterLoad(); }
+    render();
+  });
+  DB.watchDoc('taxonomy', (v, fromCache) => {
+    if (v) S.taxonomy = v;
+    else if (!fromCache) { S.taxonomy = defaultTaxonomy(); DB.putDoc('taxonomy', S.taxonomy); }
+    if (S.taxonomy) { S.loaded.taxonomy = true; afterLoad(); }
+    render();
+  });
+  DB.watchDoc('timer', v => { if (v) S.timer = { running: false, startedAt: 0, accum: 0, sel: null, ...v }; render(); });
+}
+function afterLoad() {
+  if (S.ui.popupChecked) return;
+  if (!S.loaded.exams || !S.loaded.settings || !S.loaded.logs) return;
+  S.ui.popupChecked = true;
+  maybePopup();
+}
+function maybePopup() {
+  const today = studyDate();
+  if (S.settings.popup !== false && S.settings.hidePopupDate !== today && upcomingExams().length) S.ui.popup = true;
+  S.ui.lastPopupCheck = today;
+}
+
+/* ---------- 集計 ---------- */
+function dayMap() { const m = {}; for (const l of S.logs) m[l.date] = (m[l.date] || 0) + (l.minutes || 0); return m; }
+function goalFor(ws) {
+  const g = S.settings.goals || {};
+  const keys = Object.keys(g).sort();
+  if (!keys.length) return S.settings.goalDefault || 600;
+  const past = keys.filter(k => k <= ws);
+  return g[past.length ? past[past.length - 1] : keys[0]];
+}
+function streakNow(map, today) { let d = map[today] ? today : addDays(today, -1), n = 0; while (map[d]) { n++; d = addDays(d, -1); } return n; }
+function streakMax(map) { let best = 0, cur = 0, prev = null; for (const d of Object.keys(map).filter(k => map[k] > 0).sort()) { cur = prev && diffDays(prev, d) === 1 ? cur + 1 : 1; best = Math.max(best, cur); prev = d; } return best; }
+function upcomingExams() { const t = studyDate(); return S.exams.filter(e => e.date >= t).sort((a, b) => a.date.localeCompare(b.date)); }
+const cats = () => (S.taxonomy && S.taxonomy.categories) || [];
+const catById = id => cats().find(c => c.id === id);
+const tgtById = (c, id) => c && (c.targets || []).find(t => t.id === id);
+const taskById = (t, id) => t && (t.tasks || []).find(k => k.id === id);
+const matById = id => S.materials.find(m => m.id === id);
+function logView(l) {
+  const c = catById(l.catId), t = tgtById(c, l.tgtId), k = taskById(t, l.taskId), m = matById(l.matId);
+  const cat = c ? c.name : l.catName, tgt = t ? t.name : l.tgtName, task = k ? k.name : l.taskName, mat = m ? m.name : l.matName;
+  return { color: c ? c.color : (l.catColor || '#9AA3B5'), cat, tgt, task, mat, title: mat || task || tgt || cat || '記録', path: [cat, tgt, task].filter(Boolean).join(' / ') };
+}
+function timerElapsed() { const t = S.timer; return Math.max(0, Math.floor((t.accum || 0) + (t.running ? (Date.now() - t.startedAt) / 1000 : 0))); }
+
+/* ---------- 描画 ---------- */
+let scrollMem = {}, wasSheet = false, wasPop = false;
+function render() {
+  if (!DEMO && !S.user) return;
+  if (!S.taxonomy) { $app.innerHTML = '<div class="loading">データを読み込み中…</div>'; return; }
+  const sh = document.querySelector('.sheet .bd');
+  const shTop = sh ? sh.scrollTop : 0;
+  scrollMem[S.ui.tab] = window.scrollY;
+  const tab = S.ui.tab;
+  document.body.classList.toggle('dark', tab === 'timer' && !S.ui.sheet);
+  let h = '';
+  if (tab === 'report') h = vReport();
+  else if (tab === 'timer') h = vTimer();
+  else if (tab === 'lib') h = vLib();
+  else h = vGoals();
+  h += vNav();
+  if (S.ui.sheet) h += vSheet();
+  if (S.ui.popup) h += vPopup();
+  $app.innerHTML = h;
+  const shEl = document.querySelector('.sheet'); if (shEl && !wasSheet) shEl.classList.add('anim'); wasSheet = !!S.ui.sheet;
+  const ovEl = document.querySelector('.ov'); if (ovEl && !wasPop) ovEl.classList.add('anim'); wasPop = !!S.ui.popup;
+  const sh2 = document.querySelector('.sheet .bd');
+  if (sh2) sh2.scrollTop = shTop;
+  document.body.style.overflow = (S.ui.sheet || S.ui.popup) ? 'hidden' : '';
+  window.scrollTo(0, scrollMem[tab] || 0);
+}
+
+function vNav() {
+  const b = (k, icon, label) => `<button class="${S.ui.tab === k ? 'on' : ''}" data-a="tab" data-k="${k}">${I[icon]}${label}${k === 'timer' && S.timer.running ? '<span class="dot"></span>' : ''}</button>`;
+  return `<nav class="nav" aria-label="メインメニュー">${b('report', 'chart', 'レポート')}${b('timer', 'watch', 'タイマー')}${b('lib', 'book', '教材')}${b('goals', 'flag', '目標')}</nav>`;
+}
+function topbar(en, title, note) {
+  const t = studyDate(), d = parse(t);
+  return `<header class="topbar"><div><div class="date">${d.getFullYear()}.${p2(d.getMonth() + 1)}.${p2(d.getDate())} ${['SUN','MON','TUE','WED','THU','FRI','SAT'][d.getDay()]}</div><h1>${title}</h1></div><div class="note">${note || ''}</div></header>`;
+}
+const demoBar = () => DEMO ? `<div class="demo">デモモード：データはこの端末のブラウザにだけ保存されます。Firebaseを設定すると同期モードになります。</div>` : '';
+
+function vReport() {
+  const today = studyDate(), map = dayMap(), ws = weekStart(today);
+  const days = [...Array(7)].map((_, i) => addDays(ws, i));
+  const todayMin = map[today] || 0;
+  const weekMin = sum(days.map(d => map[d] || 0));
+  const ym = today.slice(0, 7);
+  const monthMin = sum(Object.keys(map).filter(k => k.startsWith(ym)).map(k => map[k]));
+  const total = sum(Object.values(map));
+  const st = streakNow(map, today), stMax = streakMax(map);
+  const ex = upcomingExams()[0];
+  const T = hm(todayMin);
+  const sq = [...Array(14)].map((_, i) => { const d = addDays(today, i - 13); return `<span class="${map[d] ? 'on' : ''}${i === 13 ? ' t' : ''}"></span>`; }).join('');
+  const stat = (k, v) => { const x = hm(v); return `<div><span class="k">${k}</span><span class="v"><span class="n">${x.h}</span>時間<span class="n">${x.m}</span>分</span></div>`; };
+  let h = topbar('', 'レポート', '午前4:00で日付が<br>切り替わります');
+  h += `<main class="page">${demoBar()}
+  <section class="hero">
+    <div class="dia" style="right:-70px;top:-70px;width:220px;height:220px"></div>
+    <div class="dia" style="right:-30px;top:-30px;width:140px;height:140px;border-color:rgba(143,168,255,.14)"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <span class="en" style="color:#8FA8FF">TODAY<span style="font-family:'Noto Sans JP';letter-spacing:.04em;color:var(--muted);margin-left:8px">今日の勉強時間</span></span>
+      ${ex ? `<button class="exam-chip" data-a="showPopup">${ic('watch', 13)}${esc(shortName(ex.name))}まで <span class="n" style="font-size:15px">${diffDays(today, ex.date)}</span>日</button>` : ''}
+    </div>
+    <div class="big"><span class="n">${T.h}</span><span class="u">時間</span><span class="n" style="margin-left:6px">${T.m}</span><span class="u">分</span></div>
+    <div class="stats">${stat('今週', weekMin)}${stat('今月', monthMin)}${stat('累計', total)}</div>
+    <div class="btn2">
+      <button class="btn primary" data-a="newLog">${ic('plus', 18)}記録する</button>
+      <button class="btn ghost" data-a="tab" data-k="timer">${ic('watch', 18)}${S.timer.running ? '計測中…' : 'ストップウォッチ'}</button>
+    </div>
+    <div class="streak">
+      <div style="display:flex;align-items:center;gap:8px">${I.flame}
+        <div style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:11px;color:var(--muted)">連続記録</span>
+        <span style="font-size:12px;font-weight:700"><span class="n" style="font-size:30px;color:var(--amber)">${st}</span>日<span style="font-weight:500;color:var(--muted);margin-left:6px">最長 ${stMax}日</span></span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><div class="sq" role="img" aria-label="直近14日の勉強状況">${sq}</div><span style="font-size:10px;color:var(--muted)">直近14日</span></div>
+    </div>
+  </section>
+  ${vGoalCard(ws, days, map, today, weekMin)}
+  <section class="card" style="display:flex;flex-direction:column;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;padding:16px 16px 10px"><div class="sec"><span class="en">LOG</span><b>今日の記録</b></div><span style="font-size:12px" class="muted">${S.logs.filter(l => l.date === today).length}件</span></div>
+    ${logList(today)}
+  </section>
+  ${vCalendar(map, today)}
+  ${vChart(map, today)}
+  </main>`;
+  return h;
+}
+function shortName(s) { s = String(s || ''); return s.length > 10 ? s.slice(0, 10) + '…' : s; }
+function logList(date) {
+  const ls = S.logs.filter(l => l.date === date).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  if (!ls.length) return `<div class="empty">まだ記録がありません</div>`;
+  return ls.map(l => { const v = logView(l); return `<button class="logrow" data-a="editLog" data-id="${l.id}"><span class="cb" style="background:${v.color}"></span><span class="tx"><b>${esc(v.title)}</b><span>${esc(v.path)}${l.source === 'timer' ? '・ストップウォッチ' : ''}${l.memo ? '・' + esc(l.memo) : ''}</span></span><span class="tm"><span class="n">${l.minutes}</span>分</span></button>`; }).join('');
+}
+
+function vGoalCard(ws, days, map, today, weekMin) {
+  const goal = goalFor(ws), pct = goal ? Math.round(weekMin / goal * 100) : 0, fill = Math.min(pct, 100);
+  const rem = Math.max(goal - weekMin, 0), left = 7 - diffDays(ws, today);
+  const guide = goal / 7;
+  const max = Math.max(guide * 1.3, ...days.map(d => map[d] || 0)) || 1;
+  const px = v => Math.round(v / max * 92);
+  const bars = days.map(d => {
+    const v = map[d] || 0, fut = d > today;
+    const cls = 'bar' + (v >= guide ? ' hit' : '') + (d === today ? ' today' : '') + (!v ? ' none' : '');
+    return `<div class="col"><span class="n" style="${d === today ? 'color:var(--ink);font-weight:700' : ''}">${fut ? '–' : v}</span><div class="${cls}" style="height:${px(v)}px"></div></div>`;
+  }).join('');
+  const mk = Math.max(6, Math.min(94, fill));
+  return `<section class="card" style="padding:18px 16px;display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="sec"><span class="en">WEEKLY GOAL</span><b>今週の目標</b></div>
+    <span style="font-size:12px" class="muted"><span class="n" style="font-size:20px;font-weight:700;color:var(--ink)">${hmStr(weekMin)}</span> / ${hmStr(goal)}</span></div>
+    ${goalBar(pct, fill, mk)}
+    <span style="font-size:12px" class="muted">${rem > 0 ? `あと <b style="color:var(--ink)">${hmJa(rem)}</b>・残り${left}日なら1日 <b style="color:var(--ink)">${Math.ceil(rem / left)}分</b>` : `<b style="color:#0E9384">今週の目標を達成しました</b>（+${hmJa(weekMin - goal)}）`}</span>
+    <div style="border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:6px">
+      <div class="mini"><div class="guide" style="bottom:${px(guide)}px"></div><span class="guide-l" style="bottom:${px(guide) + 3}px">目安 ${Math.round(guide)}分/日（${hmJa(goal).replace('00分', '').replace(/時間$/, '時間')}÷7）</span>
+      <div class="bars">${bars}</div></div>
+      <div class="dlabels">${days.map((d, i) => `<span class="${d === today ? 't' : ''}">${WD[i]}</span>`).join('')}</div>
+      <div class="legend"><span><i style="background:var(--blue)"></i>目安達成</span><span><i style="background:var(--blue-l)"></i>未達</span><span>（分）</span></div>
+    </div></section>`;
+}
+function goalBar(pct, fill, mk) {
+  return `<div style="position:relative;padding-top:22px">
+    <span class="gmark" style="left:${mk}%">${pct}%</span>
+    <div class="gbar"><div class="f${pct >= 100 ? ' done' : ''}" style="width:${fill}%"></div><span class="tk" style="left:25%"></span><span class="tk" style="left:50%"></span><span class="tk" style="left:75%"></span></div>
+    <div class="gscale"><i style="left:0"></i><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i><i style="right:0"></i>
+    <span style="left:0">0</span><span style="left:25%;transform:translateX(-50%)">25</span><span style="left:50%;transform:translateX(-50%)">50</span><span style="left:75%;transform:translateX(-50%)">75</span><span style="right:0">100%</span></div></div>`;
+}
+
+function vCalendar(map, today) {
+  const ym = S.ui.calMonth || today.slice(0, 7);
+  const sel = S.ui.calSel || today;
+  const first = ym + '-01', lead = (parse(first).getDay() + 6) % 7, n = daysInMonth(ym);
+  const perDay = goalFor(weekStart(first)) / 7;
+  const exDays = new Set(S.exams.map(e => e.date));
+  const mDays = [...Array(n)].map((_, i) => ym + '-' + p2(i + 1));
+  const mMin = sum(mDays.map(d => map[d] || 0)), mCnt = mDays.filter(d => map[d]).length;
+  let cells = '';
+  for (let i = 0; i < lead; i++) cells += '<span></span>';
+  for (const d of mDays) {
+    const v = map[d] || 0, r = v / perDay;
+    let c = 'd';
+    if (d > today) c += ' fu'; else if (v) c += r < .5 ? ' l1' : r < 1 ? ' l2' : r < 1.5 ? ' l3' : ' l4';
+    if (exDays.has(d)) c += ' ex';
+    if (d === sel) c += ' sel';
+    cells += `<button class="${c}" data-a="calSel" data-d="${d}" aria-label="${d} ${v}分">${+d.slice(8)}</button>`;
+  }
+  const [y, m] = ym.split('-');
+  const selMin = map[sel] || 0;
+  const exOnSel = S.exams.filter(e => e.date === sel);
+  return `<section class="card" style="padding:14px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="sec"><span class="en">CALENDAR</span><b class="n" style="font-size:19px">${y}.${m}</b></div>
+      <div style="display:flex;align-items:center;gap:2px">
+        <span style="font-size:11px;margin-right:6px" class="muted"><b class="n" style="font-size:16px;color:var(--ink)">${mCnt}</b>日・<b class="n" style="font-size:16px;color:var(--ink)">${hmStr(mMin)}</b></span>
+        <button class="iconbtn" data-a="calMove" data-n="-1" aria-label="前の月">${I.l}</button>
+        <button class="iconbtn" data-a="calMove" data-n="1" aria-label="次の月">${I.r}</button>
+      </div>
+    </div>
+    <div class="cal">${WD.map((w, i) => `<span class="wd${i === 5 ? ' sa' : i === 6 ? ' su' : ''}">${w}</span>`).join('')}${cells}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:2px;gap:8px;flex-wrap:wrap">
+      <span style="font-size:12px;font-weight:700">${+sel.slice(5, 7)}/${+sel.slice(8)}（${wdOf(sel)}） <span class="n" style="font-size:16px;color:var(--blue)">${selMin}</span>分</span>
+      <div class="heat"><span>少</span><i style="background:#EEF0F4"></i><i style="background:#D6E0FD"></i><i style="background:#9DB4FA"></i><i style="background:#5A82F8"></i><i style="background:#1F44B8"></i><span>多</span><i style="box-shadow:inset 0 0 0 2px var(--amber);margin-left:8px"></i><span>試験日</span></div>
+    </div>
+    ${exOnSel.map(e => `<div style="font-size:12px;font-weight:700;color:var(--amber-d)">試験日：${esc(e.name)}</div>`).join('')}
+    <div style="margin:0 -14px -14px;border-radius:0 0 12px 12px;overflow:hidden">${sel === today ? '' : logList(sel)}</div>
+  </section>`;
+}
+
+function vChart(map, today) {
+  const mode = S.ui.chartMode, off = S.ui.chartOff;
+  let buckets = [], labels = [], title = '', guide = 0, todayIdx = -1, gap = 8;
+  const catOrder = cats().map(c => c.id);
+  const colorOf = l => logView(l).color;
+  const mk = () => ({ total: 0, parts: {} });
+  let inRange;
+  if (mode === 'week') {
+    const ws = addDays(weekStart(today), 7 * off), days = [...Array(7)].map((_, i) => addDays(ws, i));
+    buckets = days.map(mk); labels = WD.slice(); todayIdx = days.indexOf(today);
+    const we = days[6];
+    title = `${+ws.slice(5, 7)}.${+ws.slice(8)} MON – ${+we.slice(5, 7)}.${+we.slice(8)} SUN`;
+    guide = goalFor(ws) / 7;
+    inRange = l => { const i = days.indexOf(l.date); return i; };
+  } else if (mode === 'month') {
+    const ym = shiftMonth(today.slice(0, 7), off), n = daysInMonth(ym);
+    const days = [...Array(n)].map((_, i) => ym + '-' + p2(i + 1));
+    buckets = days.map(mk); labels = days.map((d, i) => (i === 0 || (i + 1) % 5 === 0) ? String(i + 1) : ''); todayIdx = days.indexOf(today); gap = 2;
+    title = ym.replace('-', '.');
+    guide = goalFor(weekStart(days[0])) / 7;
+    inRange = l => days.indexOf(l.date);
+  } else {
+    const y = +today.slice(0, 4) + off;
+    buckets = [...Array(12)].map(mk); labels = [...Array(12)].map((_, i) => String(i + 1)); gap = 6;
+    if (+today.slice(0, 4) === y) todayIdx = +today.slice(5, 7) - 1;
+    title = String(y);
+    inRange = l => l.date.startsWith(y + '-') ? +l.date.slice(5, 7) - 1 : -1;
+  }
+  const inPeriod = [];
+  for (const l of S.logs) {
+    const i = inRange(l); if (i < 0) continue;
+    inPeriod.push(l);
+    const b = buckets[i]; b.total += l.minutes;
+    const key = catById(l.catId) ? l.catId : 'x_' + (l.catName || '');
+    b.parts[key] = b.parts[key] || { v: 0, color: colorOf(l), ord: catOrder.indexOf(l.catId) < 0 ? 99 : catOrder.indexOf(l.catId) };
+    b.parts[key].v += l.minutes;
+  }
+  const totalMin = sum(buckets.map(b => b.total));
+  const H = 150;
+  const max = Math.max(guide * 1.2, ...buckets.map(b => b.total), 30);
+  const px = v => Math.round(v / max * H);
+  const bars = buckets.map((b, i) => {
+    const parts = Object.values(b.parts).sort((a, c) => a.ord - c.ord);
+    const val = mode === 'week' ? `<span class="v n">${b.total || ''}</span>` : '';
+    return `<div class="bc${i === todayIdx ? ' today' : ''}">${val}<div class="stack" style="height:${b.total ? Math.max(2, px(b.total)) : 0}px">${parts.map(p => `<i style="height:${p.v / b.total * 100}%;background:${p.color}"></i>`).join('')}</div></div>`;
+  }).join('');
+  const usedCats = {};
+  inPeriod.slice().sort((a, b) => { const ia = catOrder.indexOf(a.catId), ib = catOrder.indexOf(b.catId); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }).forEach(l => { const v = logView(l); usedCats[v.cat] = v.color; });
+  const unit = mode === 'year' ? '（時間:分）' : '（分）';
+  return `<section class="card" style="padding:16px;display:flex;flex-direction:column;gap:12px">
+    <div class="sec"><span class="en">ANALYTICS</span><b>勉強時間グラフ</b></div>
+    <div class="segs">${[['week', '週'], ['month', '月'], ['year', '年']].map(([k, t]) => `<button class="${mode === k ? 'on' : ''}" data-a="chartMode" data-k="${k}">${t}</button>`).join('')}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <button class="iconbtn" data-a="chartMove" data-n="-1" aria-label="前へ">${I.l}</button>
+      <div style="display:flex;flex-direction:column;align-items:center"><span class="n muted" style="font-size:14px;letter-spacing:.04em">${title}</span>
+      <span style="font-size:12px" class="muted">合計 <span class="n" style="font-size:22px;font-weight:700;color:var(--ink)">${hmStr(totalMin)}</span></span></div>
+      <button class="iconbtn" data-a="chartMove" data-n="1" aria-label="次へ" ${off >= 0 ? 'disabled' : ''}>${I.r}</button>
+    </div>
+    <div class="chart" style="height:${H + 22}px;--gap:${gap}px">
+      ${guide && mode !== 'year' ? `<div class="guide" style="bottom:${px(guide)}px"></div><span class="guide-l" style="bottom:${px(guide) + 3}px">目安 ${Math.round(guide)}分/日</span>` : ''}
+      <div class="bars">${bars}</div>
+    </div>
+    <div class="xl" style="--gap:${gap}px;margin-top:-4px">${labels.map((t, i) => `<span class="${i === todayIdx ? 't' : ''}">${t}</span>`).join('')}</div>
+    <div class="legend" style="justify-content:center;font-size:12px;color:var(--ink)">${Object.entries(usedCats).map(([n, c]) => `<span><i style="background:${c};width:10px;height:10px"></i>${esc(n)}</span>`).join('') || '<span class="muted">この期間の記録はありません</span>'}</div>
+    ${vBreakdown(inPeriod, totalMin)}
+  </section>`;
+}
+function vBreakdown(list, total) {
+  const lv = S.ui.bdLevel, agg = {};
+  for (const l of list) {
+    const v = logView(l);
+    const name = lv === 'cat' ? v.cat : lv === 'tgt' ? [v.cat, v.tgt || '（対象なし）'].join(' / ') : lv === 'task' ? [v.tgt || v.cat, v.task || '（タスクなし）'].join(' / ') : (v.mat || '（教材なし）');
+    agg[name] = agg[name] || { v: 0, color: v.color };
+    agg[name].v += l.minutes;
+  }
+  const rows = Object.entries(agg).sort((a, b) => b[1].v - a[1].v).slice(0, 10);
+  return `<div style="border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:14px">内訳</b>
+    <div class="segs sm">${[['cat', 'カテゴリ'], ['tgt', '対象'], ['task', 'タスク'], ['mat', '教材']].map(([k, t]) => `<button class="${lv === k ? 'on' : ''}" data-a="bd" data-k="${k}">${t}</button>`).join('')}</div></div>
+    ${rows.length ? rows.map(([n, o]) => { const p = total ? Math.round(o.v / total * 100) : 0; return `<div class="bd"><div class="h"><b>${esc(n)}</b><span style="white-space:nowrap"><span class="n" style="font-size:17px;font-weight:700">${hmStr(o.v)}</span><span class="muted"> ・ ${p}%</span></span></div><div class="tr"><i style="width:${p}%;background:${o.color}"></i></div></div>`; }).join('') : '<span class="muted" style="font-size:13px">記録がありません</span>'}
+  </div>`;
+}
+
+/* ---------- タイマー ---------- */
+function vTimer() {
+  const e = timerElapsed(), r = S.timer.running;
+  const sel = S.timer.sel, v = sel ? selView(sel) : null;
+  return `<main class="tpage">
+    <div class="dia" style="top:46%;width:520px;height:520px;border:1px solid rgba(255,255,255,.05)"></div>
+    <div class="dia" style="top:46%;width:420px;height:420px;border:1px solid rgba(143,168,255,.08)"></div>
+    <header style="display:flex;align-items:flex-end;justify-content:space-between;position:relative">
+      <div><span class="en" style="color:#8FA8FF">STOPWATCH</span><h1 style="margin:2px 0 0;font-size:26px">ストップウォッチ</h1></div>
+      <span style="font-size:11px;color:var(--muted);padding-bottom:4px;text-align:right">アプリを閉じても<br>計測は続きます</span>
+    </header>
+    <button class="tsel" data-a="timerSel" style="position:relative">
+      <span style="width:4px;height:40px;background:${v ? v.color : '#545D70'}"></span>
+      <span style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
+        <b style="font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v ? esc(v.title) : '何を勉強しますか？'}</b>
+        <span style="font-size:12px;color:var(--muted)">${v ? esc(v.path) : 'タップして教材・カテゴリを選択'}</span></span>
+      <span style="font-size:12px;font-weight:700;color:#8FA8FF">${v ? '変更' : '選択'}</span>
+    </button>
+    <div class="ring">
+      <svg viewBox="0 0 300 300" aria-hidden="true"><circle cx="150" cy="150" r="136" fill="#121A2B" stroke="#1E2840" stroke-width="10"/>
+      <circle id="ringArc" cx="150" cy="150" r="136" fill="none" stroke="#3466F6" stroke-width="10" stroke-dasharray="854.5" stroke-dashoffset="${854.5 * (1 - (e % 60) / 60)}" transform="rotate(-90 150 150)"/>
+      <circle cx="150" cy="150" r="116" fill="none" stroke="rgba(255,255,255,.06)"/></svg>
+      <div class="c"><span class="en" style="color:${r ? '#8FA8FF' : (e ? 'var(--amber)' : 'var(--muted)')}">${r ? 'RUNNING' : (e ? 'PAUSED' : 'READY')}</span>
+      <span class="n" id="clock" style="font-size:clamp(56px,18vw,72px);font-weight:600;line-height:1">${clockStr(e)}</span>
+      <span style="font-size:12px;color:var(--muted)">記録される時間 <span class="n" id="recMin" style="font-size:18px;color:#fff;font-weight:700">${Math.floor(e / 60)}</span> 分</span></div>
+    </div>
+    <div class="tbtns" style="position:relative">
+      <button class="tb" data-a="tReset">リセット</button>
+      <button class="tb main${r ? '' : ' paused'}" data-a="tToggle" aria-label="${r ? '一時停止' : '開始'}">${r ? '<svg viewBox="0 0 24 24" width="32" height="32" fill="#fff" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>' : '<svg viewBox="0 0 24 24" width="32" height="32" fill="#fff" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>'}</button>
+      <button class="tb fin" data-a="tFinish">終了<br>記録</button>
+    </div>
+    <span style="text-align:center;font-size:11.5px;color:var(--muted);position:relative">終了すると内容を確認して保存します（1分未満は切り捨て）</span>
+  </main>`;
+}
+const clockStr = e => Math.floor(e / 3600) + ':' + p2(Math.floor(e % 3600 / 60)) + ':' + p2(e % 60);
+function selView(sel) {
+  const c = catById(sel.catId), t = tgtById(c, sel.tgtId), k = taskById(t, sel.taskId), m = matById(sel.matId);
+  if (!c) return null;
+  return { color: c.color, title: (m && m.name) || (k && k.name) || (t && t.name) || c.name, path: [c.name, t && t.name, k && k.name].filter(Boolean).join(' / ') };
+}
+setInterval(() => {
+  if (S.ui.tab !== 'timer' || S.ui.sheet) return;
+  const e = timerElapsed();
+  const c = document.getElementById('clock'); if (c) c.textContent = clockStr(e);
+  const r = document.getElementById('recMin'); if (r) r.textContent = Math.floor(e / 60);
+  const a = document.getElementById('ringArc'); if (a) a.setAttribute('stroke-dashoffset', 854.5 * (1 - (e % 60) / 60));
+}, 250);
+
+/* ---------- 教材・カテゴリ ---------- */
+function vLib() {
+  const t = S.ui.libTab;
+  let h = topbar('', '教材とカテゴリ', '');
+  h += `<main class="page">
+    <div class="segs light">${[['cat', 'カテゴリ'], ['mat', '教材']].map(([k, n]) => `<button class="${t === k ? 'on' : ''}" data-a="libTab" data-k="${k}">${n}</button>`).join('')}</div>`;
+  if (t === 'cat') {
+    h += `<div style="display:flex;align-items:center;gap:6px;font-size:11.5px;flex-wrap:wrap" class="muted"><span class="lv">CATEGORY</span>カテゴリ › <span class="lv">TARGET</span>対象 › <span class="lv">TASK</span>タスク</div>`;
+    for (const c of cats()) {
+      const open = !!S.ui.open[c.id];
+      h += `<section class="card" style="overflow:hidden">
+        <div class="cathd${open ? '' : ' closed'}">
+          <span style="width:10px;height:10px;background:${c.color};box-shadow:0 0 0 2px ${c.color}55;flex:none"></span>
+          <span style="flex:1;font-size:16px;font-weight:700;min-width:0">${esc(c.name)}${c.isDefault ? '<span class="badge">初期設定</span>' : ''}</span>
+          <button class="iconbtn" data-a="catColor" data-c="${c.id}" aria-label="色を変更"><span style="width:18px;height:18px;border-radius:50%;background:${c.color};border:2px solid #fff"></span></button>
+          <button class="iconbtn" data-a="catRename" data-c="${c.id}" aria-label="${esc(c.name)}の名前を変更">${I.pen}</button>
+          <button class="iconbtn" data-a="catDel" data-c="${c.id}" aria-label="${esc(c.name)}を削除">${I.trash}</button>
+          <button class="iconbtn" data-a="catToggle" data-c="${c.id}" aria-label="開閉">${open ? I.up : I.down}</button>
+        </div>`;
+      if (open) {
+        h += `<div style="display:flex;flex-direction:column;padding:0 0 0 22px">`;
+        for (const tg of c.targets || []) {
+          h += `<div class="tg"><div class="tgh"><button class="nm" data-a="tgtRename" data-c="${c.id}" data-t="${tg.id}">${esc(tg.name)}</button>
+            <button class="iconbtn" style="color:#5B6478" data-a="tgtDel" data-c="${c.id}" data-t="${tg.id}" aria-label="${esc(tg.name)}を削除">${I.trash}</button></div>
+            <div class="chips" style="gap:6px">${(tg.tasks || []).map(k => `<span class="sub">${esc(k.name)}<button data-a="taskDel" data-c="${c.id}" data-t="${tg.id}" data-k="${k.id}" aria-label="${esc(k.name)}を削除">×</button></span>`).join('')}
+            <button class="addsub" data-a="taskAdd" data-c="${c.id}" data-t="${tg.id}">＋ タスク</button></div></div>`;
+        }
+        h += `<button class="addln" data-a="tgtAdd" data-c="${c.id}">${ic('plus', 15)}対象を追加</button></div>`;
+      }
+      h += `</section>`;
+    }
+    h += `<button class="addbig" data-a="catAdd">${ic('plus', 17)}カテゴリを追加</button>`;
+  } else {
+    if (!S.materials.length) h += `<div class="card empty" style="border:none">教材がまだありません。「教材を登録」から追加してください。</div>`;
+    for (const c of cats()) {
+      const ms = S.materials.filter(m => m.catId === c.id);
+      if (!ms.length) continue;
+      h += `<span class="lbl" style="margin-top:4px"><span style="width:10px;height:10px;background:${c.color}"></span>${esc(c.name)}</span><section class="card" style="overflow:hidden">`;
+      h += ms.sort((a, b) => a.name.localeCompare(b.name, 'ja')).map(m => { const t = tgtById(c, m.tgtId); return `<div class="rw"><button style="flex:1;border:none;background:none;text-align:left;padding:8px 0;display:flex;flex-direction:column;gap:2px;min-width:0" data-a="matEdit" data-id="${m.id}"><b style="font-size:15px">${esc(m.name)}</b><span class="muted" style="font-size:12px">${esc(c.name)}${t ? ' / ' + esc(t.name) : ''}</span></button>
+        <button class="iconbtn" style="color:#5B6478" data-a="matDel" data-id="${m.id}" aria-label="${esc(m.name)}を削除">${I.trash}</button></div>`; }).join('');
+      h += `</section>`;
+    }
+    const orphan = S.materials.filter(m => !catById(m.catId));
+    if (orphan.length) h += `<span class="lbl">カテゴリ削除済み</span><section class="card">${orphan.map(m => `<div class="rw"><b>${esc(m.name)}</b><button class="iconbtn" data-a="matDel" data-id="${m.id}" aria-label="削除">${I.trash}</button></div>`).join('')}</section>`;
+    h += `<button class="addbig" data-a="matNew">${ic('plus', 17)}教材を登録</button>`;
+  }
+  return h + `</main>`;
+}
+
+/* ---------- 目標・設定 ---------- */
+function vGoals() {
+  const today = studyDate(), ws = weekStart(today), g = goalFor(ws), G = hm(g);
+  let h = topbar('', '目標と試験日', '');
+  h += `<main class="page" style="gap:12px">
+    <span class="lbl" style="margin-top:4px"><span class="en">WEEKLY GOAL</span>週の目標</span>
+    <section class="hero" style="padding:18px 16px;gap:12px">
+      <div class="dia" style="right:-60px;bottom:-80px;width:180px;height:180px;border-color:rgba(143,168,255,.12)"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <button class="tb" style="width:48px;height:44px;border-radius:8px" data-a="goalStep" data-n="-10" aria-label="10分減らす">−10</button>
+        <button data-a="goalInput" style="border:none;background:none;color:#fff;display:flex;align-items:baseline;gap:3px;padding:0" aria-label="週の目標を入力">
+          <span class="n" style="font-size:60px;font-weight:600;line-height:.9">${G.h}</span><span style="font-size:14px;font-weight:700;color:var(--muted)">時間</span>
+          <span class="n" style="font-size:60px;font-weight:600;line-height:.9;margin-left:4px">${G.m}</span><span style="font-size:14px;font-weight:700;color:var(--muted)">分</span></button>
+        <button class="tb" style="width:48px;height:44px;border-radius:8px" data-a="goalStep" data-n="10" aria-label="10分増やす">+10</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid rgba(255,255,255,.08);padding-top:10px">
+        <span>1日あたりの目安 <span class="n" style="font-size:18px;font-weight:700;color:var(--amber)">${Math.round(g / 7)}</span>分</span><span>数字をタップで直接入力</span></div>
+    </section>
+    <span class="hint">変更は今週（${+ws.slice(5, 7)}/${+ws.slice(8)}〜）から反映され、過去の週の目標はそのまま残ります。</span>
+    <span class="lbl" style="margin-top:6px"><span class="en">EXAMS</span>試験日</span>
+    <section class="card" style="overflow:hidden">`;
+  const exs = S.exams.slice().sort((a, b) => a.date.localeCompare(b.date));
+  h += exs.map(e => {
+    const c = catById(e.catId), d = diffDays(today, e.date), past = d < 0;
+    return `<div class="rw" style="min-height:64px;padding-right:6px${past ? ';opacity:.55' : ''}"><span style="width:4px;height:38px;background:${c ? c.color : '#9AA3B5'};flex:none"></span>
+      <button style="flex:1;border:none;background:none;text-align:left;display:flex;flex-direction:column;gap:1px;min-width:0;padding:6px 0" data-a="examEdit" data-id="${e.id}"><b style="font-size:15px">${esc(e.name)}</b><span class="n muted" style="font-size:14px">${e.date.replace(/-/g, '.')} ${['SUN','MON','TUE','WED','THU','FRI','SAT'][parse(e.date).getDay()]}${c ? ' ・ ' + esc(c.name) : ''}</span></button>
+      <span style="font-size:12px;font-weight:700;white-space:nowrap">${past ? '終了' : d === 0 ? '<span style="color:var(--amber-d)">今日</span>' : `あと <span class="n" style="font-size:24px;color:var(--amber-d)">${d}</span>日`}</span>
+      <button class="iconbtn" style="color:#5B6478" data-a="examDel" data-id="${e.id}" aria-label="${esc(e.name)}を削除">${I.trash}</button></div>`;
+  }).join('');
+  h += `<button class="addln" style="padding:0 16px" data-a="examNew">${ic('plus', 15)}試験日を追加</button></section>
+    <span class="lbl" style="margin-top:6px"><span class="en">SETTINGS</span>設定</span>
+    <section class="card" style="overflow:hidden">
+      <div class="rw"><span style="display:flex;flex-direction:column;gap:1px"><b>起動時にカウントダウンを表示</b><span class="muted" style="font-size:11.5px">アプリを開いたときに表示（「今日は表示しない」で当日は非表示）</span></span>
+        <button class="switch${S.settings.popup !== false ? ' on' : ''}" data-a="popupToggle" role="switch" aria-checked="${S.settings.popup !== false}" aria-label="起動時にカウントダウンを表示"></button></div>
+      <div class="rw"><span>日付の切り替え時刻</span><span class="n" style="font-size:18px;font-weight:700">AM 4:00</span></div>
+      <div class="rw"><span>週の始まり</span><b>月曜日</b></div>
+      <div class="rw"><span>${DEMO ? '保存モード' : 'ログイン中'}</span><span class="muted" style="font-size:13px;overflow:hidden;text-overflow:ellipsis">${DEMO ? 'デモ（この端末のみ）' : esc(S.email)}</span></div>
+      <button class="rw" data-a="export">データを書き出す（バックアップ）</button>
+      ${DEMO ? `<button class="rw" data-a="sample">サンプルデータを読み込む（デモ用）</button><button class="rw" style="color:var(--red)" data-a="wipe">デモデータをすべて消す</button>` : `<button class="rw" style="color:var(--red)" data-a="logout">ログアウト</button>`}
+    </section>
+    <span class="hint" style="text-align:center;margin-top:8px">STUDY LOG v1.0</span>
+  </main>`;
+  return h;
+}
+
+/* ---------- 入力シート ---------- */
+function vSheet() {
+  const s = S.ui.sheet;
+  if (s.type === 'log' || s.type === 'tsel') return vLogSheet(s);
+  if (s.type === 'mat') return vMatSheet(s);
+  if (s.type === 'exam') return vExamSheet(s);
+  return '';
+}
+function sheetFrame(title, body, foot, extraHd = '') {
+  return `<div class="sheet" role="dialog" aria-label="${title}"><div class="hd"><button class="iconbtn" data-a="closeSheet" aria-label="閉じる">${I.x}</button><h2>${title}</h2>${extraHd || '<span style="width:44px"></span>'}</div><div class="bd">${body}</div><div class="ft">${foot}</div></div>`;
+}
+function selSections(s) {
+  const c = catById(s.catId), t = tgtById(c, s.tgtId);
+  let h = `<div style="display:flex;flex-direction:column;gap:10px"><span class="lbl"><span class="en">CATEGORY</span>カテゴリ</span><div class="chips">
+    ${cats().map(x => `<button class="chip${x.id === s.catId ? ' on' : ''}" data-a="sCat" data-id="${x.id}" aria-pressed="${x.id === s.catId}">${esc(x.name)}</button>`).join('')}
+    ${cats().length ? '' : '<span class="hint">「教材」タブでカテゴリを追加してください</span>'}</div></div>`;
+  if (c) {
+    h += `<div style="display:flex;flex-direction:column;gap:10px"><span class="lbl"><span class="en">TARGET</span>対象<span class="muted" style="font-size:11px;font-weight:500">（${esc(c.name)}のみ表示）</span></span><div class="chips">
+      ${(c.targets || []).map(x => `<button class="chip${x.id === s.tgtId ? ' on' : ''}" data-a="sTgt" data-id="${x.id}" aria-pressed="${x.id === s.tgtId}">${esc(x.name)}</button>`).join('')}
+      <button class="chip add" data-a="sTgtAdd">＋ 追加</button></div></div>`;
+  }
+  if (t) {
+    h += `<div style="display:flex;flex-direction:column;gap:10px"><span class="lbl"><span class="en">TASK</span>タスク</span><div class="chips">
+      ${(t.tasks || []).map(x => `<button class="chip${x.id === s.taskId ? ' on' : ''}" data-a="sTask" data-id="${x.id}" aria-pressed="${x.id === s.taskId}">${esc(x.name)}</button>`).join('')}
+      <button class="chip add" data-a="sTaskAdd">＋ 追加</button></div></div>`;
+  }
+  if (c) {
+    const ms = S.materials.filter(m => m.catId === c.id && (!m.tgtId || !s.tgtId || m.tgtId === s.tgtId));
+    h += `<div style="display:flex;flex-direction:column;gap:10px"><span class="lbl"><span class="en">MATERIAL</span>教材</span>
+      <div class="card" style="overflow:hidden;display:flex;flex-direction:column">
+      ${ms.map(m => `<button class="row" data-a="sMat" data-id="${m.id}" aria-pressed="${m.id === s.matId}"><span class="radio${m.id === s.matId ? ' on' : ''}"></span><b style="flex:1">${esc(m.name)}</b></button>`).join('')}
+      <button class="row" data-a="sMat" data-id="" aria-pressed="${!s.matId}"><span class="radio${!s.matId ? ' on' : ''}"></span><span style="flex:1" class="muted">教材なし</span></button>
+      <button class="row" style="color:var(--blue);font-weight:700;font-size:14px" data-a="sMatAdd">${ic('plus', 16)}教材を追加</button></div></div>`;
+  }
+  return h;
+}
+function vLogSheet(s) {
+  if (s.type === 'tsel') {
+    return sheetFrame('計測する内容', selSections(s), `<button class="btn primary block" data-a="tselSave">この内容で計測</button>`);
+  }
+  const H = hm(s.min);
+  let body = '';
+  if (s.mode === 'new' && !s.fromTimer) body += `<div class="segs light"><button class="on">手入力</button><button data-a="toTimer">ストップウォッチ</button></div>`;
+  if (s.fromTimer) body += `<div class="demo" style="background:#EEF2FE;border-color:#C9D5FB;color:#1F48C9">ストップウォッチの計測結果です。内容を確認して保存してください。</div>`;
+  body += `<label class="card" style="display:flex;align-items:center;gap:10px;height:50px;padding:0 16px">${I.cal}<input type="date" data-in="date" value="${s.date}" max="${studyDate()}" style="flex:1;border:none;background:none;font:600 17px 'Barlow',sans-serif;color:var(--ink);min-width:0" aria-label="日付"><span class="muted" style="font-size:13px">${wdOf(s.date)}曜日</span></label>`;
+  body += selSections(s);
+  body += `<div style="display:flex;flex-direction:column;gap:10px"><span class="lbl"><span class="en">TIME</span>勉強時間<span class="muted" style="font-size:11px;font-weight:500">（1分単位）</span></span>
+    <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <button class="st" data-a="sMin" data-n="-1" aria-label="1分減らす">−1</button>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input class="tin" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="23" data-in="h" value="${H.h}" aria-label="時間"><span class="muted" style="font-size:13px;font-weight:700">時間</span>
+          <input class="tin" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="59" data-in="m" value="${H.m}" aria-label="分"><span class="muted" style="font-size:13px;font-weight:700">分</span>
+        </div>
+        <button class="st" data-a="sMin" data-n="1" aria-label="1分増やす">+1</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px">
+        ${[5, 10, 15, 30].map(n => `<button class="qa" data-a="sMin" data-n="${n}">+${n}</button>`).join('')}<button class="qa" style="background:#fff;border-color:#D3D9E3;color:var(--sub)" data-a="sMinZero">0</button>
+      </div>
+      <span class="muted" style="font-size:12px;text-align:right">合計 <span class="n" id="totalMin" style="font-size:18px;font-weight:700;color:var(--ink)">${s.min}</span> 分</span>
+    </div></div>
+    <div style="display:flex;flex-direction:column;gap:10px"><span class="lbl"><span class="en">MEMO</span>メモ（任意）</span>
+    <textarea class="field" rows="2" data-in="memo" placeholder="例：Part 3 を2セット" aria-label="メモ">${esc(s.memo || '')}</textarea></div>`;
+  if (s.mode === 'edit') body += `<button class="btn danger block" data-a="logDel">この記録を削除</button>`;
+  return sheetFrame(s.mode === 'edit' ? '記録を編集' : '勉強を記録', body, `<button class="btn primary block" data-a="logSave">保存する</button>`);
+}
+function vMatSheet(s) {
+  const c = catById(s.catId);
+  const body = `<label style="display:flex;flex-direction:column;gap:8px"><span class="lbl">教材名</span><input class="field" data-in="name" value="${esc(s.name || '')}" placeholder="例：公式問題集 10"></label>
+    <label style="display:flex;flex-direction:column;gap:8px"><span class="lbl">カテゴリ</span><select class="field" data-in="catId" data-re="1">${cats().map(x => `<option value="${x.id}" ${x.id === s.catId ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>
+    <label style="display:flex;flex-direction:column;gap:8px"><span class="lbl">対象（任意）</span><select class="field" data-in="tgtId"><option value="">指定しない（カテゴリ内で共通）</option>${c ? (c.targets || []).map(x => `<option value="${x.id}" ${x.id === s.tgtId ? 'selected' : ''}>${esc(x.name)}</option>`).join('') : ''}</select></label>`;
+  return sheetFrame(s.id ? '教材を編集' : '教材を登録', body, `<button class="btn primary block" data-a="matSave">保存する</button>`);
+}
+function vExamSheet(s) {
+  const body = `<label style="display:flex;flex-direction:column;gap:8px"><span class="lbl">試験名</span><input class="field" data-in="name" value="${esc(s.name || '')}" placeholder="例：日商簿記2級"></label>
+    <label style="display:flex;flex-direction:column;gap:8px"><span class="lbl">試験日</span><input class="field" type="date" data-in="date" value="${s.date || ''}"></label>
+    <label style="display:flex;flex-direction:column;gap:8px"><span class="lbl">カテゴリ（任意）</span><select class="field" data-in="catId"><option value="">指定しない</option>${cats().map(x => `<option value="${x.id}" ${x.id === s.catId ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>`;
+  return sheetFrame(s.id ? '試験日を編集' : '試験日を追加', body, `<button class="btn primary block" data-a="examSave">保存する</button>`);
+}
+
+/* ---------- ポップアップ ---------- */
+function vPopup() {
+  const today = studyDate(), ex = upcomingExams();
+  const ws = weekStart(today), map = dayMap();
+  const weekMin = sum([...Array(7)].map((_, i) => map[addDays(ws, i)] || 0));
+  const goal = goalFor(ws), pct = goal ? Math.round(weekMin / goal * 100) : 0, fill = Math.min(pct, 100);
+  const rem = Math.max(goal - weekMin, 0), left = 7 - diffDays(ws, today);
+  const e = ex[0];
+  const days = e ? diffDays(today, e.date) : 0;
+  return `<div class="ov" data-a="ovClose"><div class="pop" role="dialog" aria-label="試験日までの日数" data-stop="1">
+    ${e ? `<div class="top"><div class="dia" style="right:-60px;top:-60px;width:200px;height:200px;border:1px solid rgba(242,163,58,.18)"></div><div class="dia" style="right:-20px;top:-20px;width:120px;height:120px;border:1px solid rgba(255,255,255,.07)"></div>
+      <span class="en" style="color:var(--amber)">NEXT EXAM</span>
+      <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:20px;font-weight:700">${esc(e.name)}</span><span class="n" style="font-size:16px;color:var(--muted);letter-spacing:.06em">${e.date.replace(/-/g, '.')} ${['SUN','MON','TUE','WED','THU','FRI','SAT'][parse(e.date).getDay()]}</span></div>
+      ${days === 0 ? `<div style="font-size:30px;font-weight:700;color:var(--amber);margin-top:6px">今日が試験日です</div>` : `<div style="display:flex;align-items:baseline;gap:8px;margin-top:6px;flex-wrap:wrap"><span style="font-size:16px;font-weight:700;color:var(--muted)">試験日まで あと</span><span class="n" style="font-size:104px;font-weight:700;line-height:.82;color:var(--amber)">${days}</span><span style="font-size:18px;font-weight:700">日</span></div>`}
+    </div>` : ''}
+    <div style="margin:16px 20px 4px;padding:14px 14px 10px;border-radius:10px;background:#F4F6FA;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="sec"><span class="en" style="font-size:10.5px">WEEKLY GOAL</span><b style="font-size:14px">今週の目標</b></span>
+      <span style="font-size:12px" class="muted"><span class="n" style="font-size:18px;font-weight:700;color:var(--ink)">${hmStr(weekMin)}</span> / ${hmStr(goal)}</span></div>
+      ${goalBar(pct, fill, Math.max(8, Math.min(92, fill)))}
+      <span style="font-size:11.5px" class="muted">${rem > 0 ? `あと <b style="color:var(--ink)">${hmJa(rem)}</b>・残り${left}日なら1日 <b style="color:var(--ink)">${Math.ceil(rem / left)}分</b>` : '<b style="color:#0E9384">今週の目標を達成しています</b>'}</span>
+    </div>
+    <div style="padding:0 20px 18px;display:flex;flex-direction:column">
+      ${ex.slice(1, 4).map((x, i, a) => `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;${i < a.length - 1 ? 'border-bottom:1px solid var(--line)' : ''}"><div style="display:flex;flex-direction:column;gap:1px;min-width:0"><b style="font-size:14px">${esc(x.name)}</b><span class="n muted" style="font-size:14px">${x.date.replace(/-/g, '.')}</span></div><span style="font-size:12px;font-weight:700;white-space:nowrap">あと <span class="n" style="font-size:26px;color:var(--amber-d)">${diffDays(today, x.date)}</span> 日</span></div>`).join('')}
+      <button class="btn primary block" style="margin-top:8px" data-a="popClose">今日もはじめる</button>
+      <button style="align-self:center;font-size:13px;border:none;background:none;padding:12px 8px 0" class="muted" data-a="popHide">今日は表示しない</button>
+    </div></div></div>`;
+}
+
+/* ---------- 操作 ---------- */
+let toastT;
+function toast(msg) { document.querySelectorAll('.toast').forEach(t => t.remove()); const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); clearTimeout(toastT); toastT = setTimeout(() => t.remove(), 2200); }
+function saveTax() { DB.putDoc('taxonomy', S.taxonomy); render(); }
+function saveSettings() { DB.putDoc('settings', S.settings); render(); }
+function saveTimer() { DB.putDoc('timer', S.timer); render(); }
+function ask(msg, def = '') { const v = prompt(msg, def); return v == null ? null : v.trim(); }
+
+function firstSel(catId) {
+  const c = catById(catId) || cats()[0];
+  if (!c) return { catId: '', tgtId: '', taskId: '', matId: '' };
+  const t = (c.targets || [])[0], k = t && (t.tasks || [])[0];
+  const m = S.materials.find(x => x.catId === c.id && (!x.tgtId || !t || x.tgtId === t.id));
+  return { catId: c.id, tgtId: t ? t.id : '', taskId: k ? k.id : '', matId: m ? m.id : '' };
+}
+function lastSel() {
+  const l = S.logs.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))[0];
+  if (l && catById(l.catId)) return { catId: l.catId, tgtId: l.tgtId || '', taskId: l.taskId || '', matId: matById(l.matId) ? l.matId : '' };
+  return firstSel();
+}
+
+const A = {
+  tab: d => { S.ui.tab = d.k; window.scrollTo(0, 0); scrollMem[d.k] = 0; render(); },
+  showPopup: () => { S.ui.popup = true; render(); },
+  popClose: () => { S.ui.popup = false; render(); },
+  popHide: () => { S.ui.popup = false; S.settings.hidePopupDate = studyDate(); saveSettings(); },
+  ovClose: (d, el, ev) => { if (ev.target === el) { S.ui.popup = false; render(); } },
+  newLog: () => { S.ui.sheet = { type: 'log', mode: 'new', date: studyDate(), min: 30, memo: '', ...lastSel() }; render(); },
+  editLog: d => { const l = S.logs.find(x => x.id === d.id); if (!l) return; S.ui.sheet = { type: 'log', mode: 'edit', id: l.id, date: l.date, min: l.minutes, memo: l.memo || '', source: l.source, catId: catById(l.catId) ? l.catId : '', tgtId: l.tgtId || '', taskId: l.taskId || '', matId: l.matId || '' }; render(); },
+  closeSheet: () => { S.ui.sheet = null; render(); },
+  toTimer: () => { S.ui.sheet = null; S.ui.tab = 'timer'; render(); },
+  calSel: d => { S.ui.calSel = d.d; render(); },
+  calMove: d => { const t = studyDate(); S.ui.calMonth = shiftMonth(S.ui.calMonth || t.slice(0, 7), +d.n); render(); },
+  chartMode: d => { S.ui.chartMode = d.k; S.ui.chartOff = 0; render(); },
+  chartMove: d => { S.ui.chartOff = Math.min(0, S.ui.chartOff + +d.n); render(); },
+  bd: d => { S.ui.bdLevel = d.k; render(); },
+  sCat: d => { const s = S.ui.sheet; Object.assign(s, firstSel(d.id)); render(); },
+  sTgt: d => { const s = S.ui.sheet, c = catById(s.catId), t = tgtById(c, d.id); s.tgtId = d.id; s.taskId = t && t.tasks && t.tasks[0] ? t.tasks[0].id : ''; const m = matById(s.matId); if (m && m.tgtId && m.tgtId !== d.id) { const m2 = S.materials.find(x => x.catId === s.catId && (!x.tgtId || x.tgtId === d.id)); s.matId = m2 ? m2.id : ''; } render(); },
+  sTask: d => { S.ui.sheet.taskId = d.id; render(); },
+  sMat: d => { S.ui.sheet.matId = d.id; render(); },
+  sTgtAdd: () => { const s = S.ui.sheet, n = ask('追加する「対象」の名前'); if (!n) return; const c = catById(s.catId); const t = { id: uid(), name: n, tasks: [] }; (c.targets = c.targets || []).push(t); s.tgtId = t.id; s.taskId = ''; saveTax(); },
+  sTaskAdd: () => { const s = S.ui.sheet, n = ask('追加する「タスク」の名前'); if (!n) return; const t = tgtById(catById(s.catId), s.tgtId); const k = { id: uid(), name: n }; (t.tasks = t.tasks || []).push(k); s.taskId = k.id; saveTax(); },
+  sMatAdd: () => { const s = S.ui.sheet, n = ask('教材名を入力'); if (!n) return; const m = { id: uid(), name: n, catId: s.catId, tgtId: s.tgtId || '' }; S.materials.push(m); s.matId = m.id; const { id, ...v } = m; DB.put('materials', id, v); render(); },
+  sMin: d => { const s = S.ui.sheet; s.min = Math.max(0, Math.min(1439, s.min + +d.n)); render(); },
+  sMinZero: () => { S.ui.sheet.min = 0; render(); },
+  logSave: () => {
+    const s = S.ui.sheet;
+    if (!s.catId) return toast('カテゴリを選んでください');
+    if (!(s.min > 0)) return toast('勉強時間を入力してください');
+    if (!s.date) return toast('日付を入力してください');
+    const c = catById(s.catId), t = tgtById(c, s.tgtId), k = taskById(t, s.taskId), m = matById(s.matId);
+    const old = s.id ? S.logs.find(x => x.id === s.id) : null;
+    const id = s.id || uid();
+    const v = { date: s.date, minutes: s.min, catId: c.id, catName: c.name, catColor: c.color, tgtId: t ? t.id : '', tgtName: t ? t.name : '', taskId: k ? k.id : '', taskName: k ? k.name : '', matId: m ? m.id : '', matName: m ? m.name : '', memo: s.memo || '', source: s.fromTimer ? 'timer' : (old ? old.source || 'manual' : 'manual'), createdAt: old ? old.createdAt || Date.now() : Date.now() };
+    const i = S.logs.findIndex(x => x.id === id); if (i >= 0) S.logs[i] = { id, ...v }; else S.logs.push({ id, ...v });
+    DB.put('logs', id, v);
+    if (s.fromTimer) S.timer = { running: false, startedAt: 0, accum: 0, sel: S.timer.sel }, DB.putDoc('timer', S.timer);
+    S.ui.sheet = null; S.ui.tab = 'report'; S.ui.calSel = null;
+    toast(s.mode === 'edit' ? '記録を更新しました' : `${s.min}分を記録しました`);
+    render();
+  },
+  logDel: () => { const s = S.ui.sheet; if (!confirm('この記録を削除しますか？')) return; S.logs = S.logs.filter(x => x.id !== s.id); DB.del('logs', s.id); S.ui.sheet = null; toast('削除しました'); render(); },
+  timerSel: () => { const sel = S.timer.sel && catById(S.timer.sel.catId) ? S.timer.sel : lastSel(); S.ui.sheet = { type: 'tsel', ...sel }; render(); },
+  tselSave: () => { const s = S.ui.sheet; if (!s.catId) return toast('カテゴリを選んでください'); S.timer.sel = { catId: s.catId, tgtId: s.tgtId, taskId: s.taskId, matId: s.matId }; S.ui.sheet = null; saveTimer(); },
+  tToggle: () => {
+    const t = S.timer;
+    if (t.running) { t.accum = timerElapsed(); t.running = false; t.startedAt = 0; }
+    else { if (!t.sel || !catById(t.sel.catId)) t.sel = lastSel(); t.running = true; t.startedAt = Date.now(); }
+    saveTimer();
+  },
+  tReset: () => { if (timerElapsed() > 0 && !confirm('計測時間をリセットしますか？')) return; S.timer = { running: false, startedAt: 0, accum: 0, sel: S.timer.sel }; saveTimer(); },
+  tFinish: () => {
+    const e = timerElapsed();
+    if (e < 60) return toast('1分以上計測すると記録できます');
+    const t = S.timer; if (t.running) { t.accum = e; t.running = false; t.startedAt = 0; DB.putDoc('timer', t); }
+    const sel = t.sel && catById(t.sel.catId) ? t.sel : lastSel();
+    S.ui.sheet = { type: 'log', mode: 'new', fromTimer: true, date: studyDate(), min: Math.floor(e / 60), memo: '', ...sel };
+    render();
+  },
+  libTab: d => { S.ui.libTab = d.k; render(); },
+  catToggle: d => { S.ui.open[d.c] = !S.ui.open[d.c]; render(); },
+  catAdd: () => { const n = ask('追加するカテゴリ名（例：簿記、FP）'); if (!n) return; const used = cats().map(c => c.color); const color = PALETTE.find(p => !used.includes(p)) || PALETTE[cats().length % PALETTE.length]; const c = { id: uid(), name: n, color, targets: [] }; S.taxonomy.categories.push(c); S.ui.open[c.id] = true; saveTax(); },
+  catRename: d => { const c = catById(d.c), n = ask('カテゴリ名を変更', c.name); if (!n) return; c.name = n; saveTax(); },
+  catColor: d => { const c = catById(d.c), i = PALETTE.indexOf(c.color); c.color = PALETTE[(i + 1) % PALETTE.length]; saveTax(); },
+  catDel: d => { const c = catById(d.c); if (!confirm(`カテゴリ「${c.name}」を削除しますか？\n（対象・タスクも削除されます。過去の勉強記録は残ります）`)) return; S.taxonomy.categories = cats().filter(x => x.id !== c.id); saveTax(); },
+  tgtAdd: d => { const c = catById(d.c), n = ask(`「${c.name}」に追加する対象（例：2級、TOEIC）`); if (!n) return; (c.targets = c.targets || []).push({ id: uid(), name: n, tasks: [] }); saveTax(); },
+  tgtRename: d => { const t = tgtById(catById(d.c), d.t), n = ask('対象の名前を変更', t.name); if (!n) return; t.name = n; saveTax(); },
+  tgtDel: d => { const c = catById(d.c), t = tgtById(c, d.t); if (!confirm(`対象「${t.name}」を削除しますか？（タスクも削除されます。過去の記録は残ります）`)) return; c.targets = c.targets.filter(x => x.id !== t.id); saveTax(); },
+  taskAdd: d => { const t = tgtById(catById(d.c), d.t), n = ask(`「${t.name}」に追加するタスク（例：リスニング）`); if (!n) return; (t.tasks = t.tasks || []).push({ id: uid(), name: n }); saveTax(); },
+  taskDel: d => { const t = tgtById(catById(d.c), d.t), k = taskById(t, d.k); if (!confirm(`タスク「${k.name}」を削除しますか？`)) return; t.tasks = t.tasks.filter(x => x.id !== k.id); saveTax(); },
+  matNew: () => { const c = cats()[0]; if (!c) return toast('先にカテゴリを追加してください'); S.ui.sheet = { type: 'mat', name: '', catId: c.id, tgtId: '' }; render(); },
+  matEdit: d => { const m = matById(d.id); S.ui.sheet = { type: 'mat', id: m.id, name: m.name, catId: m.catId, tgtId: m.tgtId || '' }; render(); },
+  matSave: () => { const s = S.ui.sheet; if (!s.name || !s.name.trim()) return toast('教材名を入力してください'); const id = s.id || uid(); const v = { name: s.name.trim(), catId: s.catId, tgtId: s.tgtId || '' }; const i = S.materials.findIndex(x => x.id === id); if (i >= 0) S.materials[i] = { id, ...v }; else S.materials.push({ id, ...v }); DB.put('materials', id, v); S.ui.sheet = null; toast('教材を保存しました'); render(); },
+  matDel: d => { const m = matById(d.id); if (!confirm(`教材「${m.name}」を削除しますか？（過去の記録は残ります）`)) return; S.materials = S.materials.filter(x => x.id !== m.id); DB.del('materials', m.id); render(); },
+  goalStep: d => setGoal(goalFor(weekStart(studyDate())) + +d.n),
+  goalInput: () => { const cur = goalFor(weekStart(studyDate())); const v = ask('週の目標を「時間:分」または「分」で入力（例 10:00 / 600）', hmStr(cur)); if (v == null) return; let m; if (v.includes(':')) { const [a, b] = v.split(':'); m = (+a || 0) * 60 + (+b || 0); } else m = +v; if (!(m > 0)) return toast('正しい値を入力してください'); setGoal(m); },
+  examNew: () => { S.ui.sheet = { type: 'exam', name: '', date: '', catId: '' }; render(); },
+  examEdit: d => { const e = S.exams.find(x => x.id === d.id); S.ui.sheet = { type: 'exam', id: e.id, name: e.name, date: e.date, catId: e.catId || '' }; render(); },
+  examSave: () => { const s = S.ui.sheet; if (!s.name || !s.name.trim()) return toast('試験名を入力してください'); if (!s.date) return toast('試験日を入力してください'); const id = s.id || uid(); const v = { name: s.name.trim(), date: s.date, catId: s.catId || '' }; const i = S.exams.findIndex(x => x.id === id); if (i >= 0) S.exams[i] = { id, ...v }; else S.exams.push({ id, ...v }); DB.put('exams', id, v); S.ui.sheet = null; toast('試験日を保存しました'); render(); },
+  examDel: d => { const e = S.exams.find(x => x.id === d.id); if (!confirm(`「${e.name}」を削除しますか？`)) return; S.exams = S.exams.filter(x => x.id !== e.id); DB.del('exams', e.id); render(); },
+  popupToggle: () => { S.settings.popup = S.settings.popup === false; saveSettings(); },
+  export: exportData,
+  sample: loadSample,
+  wipe: async () => { if (!confirm('デモデータをすべて消しますか？')) return; await LocalDB.wipe(); S.taxonomy = defaultTaxonomy(); DB.putDoc('taxonomy', S.taxonomy); toast('消去しました'); },
+  logout: async () => { if (!confirm('ログアウトしますか？')) return; DB.stop(); await DB.authM.signOut(DB.auth); location.reload(); }
+};
+function setGoal(m) { m = Math.max(10, Math.min(10080, Math.round(m))); const ws = weekStart(studyDate()); S.settings.goals = { ...(S.settings.goals || {}), [ws]: m }; S.settings.goalDefault = m; saveSettings(); }
+
+document.addEventListener('click', ev => {
+  const el = ev.target.closest('[data-a]'); if (!el) return;
+  if (el.dataset.a === 'ovClose' && ev.target !== el) return;
+  const fn = A[el.dataset.a]; if (fn) { ev.preventDefault(); fn(el.dataset, el, ev); }
+});
+document.addEventListener('input', ev => {
+  const t = ev.target, k = t.dataset && t.dataset.in, s = S.ui.sheet; if (!k || !s) return;
+  if (k === 'h' || k === 'm') {
+    const root = t.closest('.card');
+    const h = +(root.querySelector('[data-in="h"]').value) || 0, m = +(root.querySelector('[data-in="m"]').value) || 0;
+    s.min = Math.max(0, Math.min(1439, h * 60 + m));
+    const tm = document.getElementById('totalMin'); if (tm) tm.textContent = s.min;
+  } else s[k] = t.value;
+});
+document.addEventListener('change', ev => {
+  const t = ev.target, k = t.dataset && t.dataset.in, s = S.ui.sheet; if (!k || !s) return;
+  if (k === 'h' || k === 'm') {
+    const root = t.closest('.card'), H = hm(s.min);
+    const hi = root.querySelector('[data-in="h"]'), mi = root.querySelector('[data-in="m"]');
+    if (document.activeElement !== hi) hi.value = H.h;
+    if (document.activeElement !== mi) mi.value = H.m;
+    return;
+  }
+  s[k] = t.value;
+  if (k === 'catId' && s.type === 'mat') s.tgtId = '';
+  if (k === 'date' || t.dataset.re) render();
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || !S.taxonomy) return;
+  if (S.ui.lastPopupCheck !== studyDate()) { maybePopup(); }
+  render();
+});
+
+/* ---------- バックアップ ---------- */
+async function exportData() {
+  const data = { app: 'STUDY LOG', exportedAt: new Date().toISOString(), logs: S.logs, materials: S.materials, exams: S.exams, settings: S.settings, taxonomy: S.taxonomy };
+  const name = `studylog-backup-${studyDate()}.json`;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  try {
+    const file = new File([blob], name, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  toast('書き出しました');
+}
+
+/* ---------- デモ用サンプル ---------- */
+async function loadSample() {
+  if (!confirm('サンプルの記録・教材・試験日を追加しますか？')) return;
+  const tx = S.taxonomy;
+  const mk = (name, color, tgts) => ({ id: uid(), name, color, targets: tgts.map(([n, ts]) => ({ id: uid(), name: n, tasks: ts.map(x => ({ id: uid(), name: x })) })) });
+  if (!tx.categories.find(c => c.name === '簿記')) tx.categories.push(mk('簿記', '#0E9384', [['2級', ['商業簿記', '工業簿記']], ['3級', ['仕訳', '決算整理']]]));
+  if (!tx.categories.find(c => c.name === 'FP')) tx.categories.push(mk('FP', '#E08A00', [['2級', ['ライフプランニング', 'リスク管理', '金融資産運用', 'タックスプランニング', '不動産', '相続・事業承継']]]));
+  await DB.putDoc('taxonomy', tx);
+  const en = tx.categories.find(c => c.name === '英語'), bo = tx.categories.find(c => c.name === '簿記'), fp = tx.categories.find(c => c.name === 'FP');
+  const toeic = en.targets.find(t => t.name === 'TOEIC') || en.targets[0], b2 = bo.targets[0], f2 = fp.targets[0];
+  const mats = [
+    { id: uid(), name: '公式問題集 10', catId: en.id, tgtId: toeic.id },
+    { id: uid(), name: '金のフレーズ', catId: en.id, tgtId: toeic.id },
+    { id: uid(), name: '合格テキスト 商業簿記', catId: bo.id, tgtId: b2.id },
+    { id: uid(), name: '合格トレーニング 工業簿記', catId: bo.id, tgtId: b2.id },
+    { id: uid(), name: 'FP2級 過去問題集', catId: fp.id, tgtId: f2.id }
+  ];
+  await DB.batchPut('materials', mats);
+  const today = studyDate(), logs = [];
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  for (let i = 75; i >= 0; i--) {
+    const d = addDays(today, -i);
+    if (Math.random() < .22 && i > 0) continue;
+    const n = 1 + Math.floor(Math.random() * 3);
+    for (let j = 0; j < n; j++) {
+      const r = Math.random();
+      const [c, t, m] = r < .55 ? [en, toeic, pick(mats.slice(0, 2))] : r < .85 ? [bo, b2, pick(mats.slice(2, 4))] : [fp, f2, mats[4]];
+      const k = pick(t.tasks);
+      logs.push({ id: uid(), date: d, minutes: 10 + Math.floor(Math.random() * 50), catId: c.id, catName: c.name, catColor: c.color, tgtId: t.id, tgtName: t.name, taskId: k.id, taskName: k.name, matId: m.id, matName: m.name, memo: '', source: Math.random() < .3 ? 'timer' : 'manual', createdAt: Date.now() - i * 864e5 + j });
+    }
+  }
+  await DB.batchPut('logs', logs);
+  await DB.batchPut('exams', [
+    { id: uid(), name: '日商簿記2級', date: addDays(today, 23), catId: bo.id },
+    { id: uid(), name: 'TOEIC L&R 公開テスト', date: addDays(today, 30), catId: en.id },
+    { id: uid(), name: 'FP2級', date: addDays(today, 93), catId: fp.id }
+  ]);
+  toast('サンプルを読み込みました');
+}
+
+/* ---------- ログイン ---------- */
+function vLogin(err = '') {
+  $app.innerHTML = `<div class="login">
+    <svg viewBox="0 0 512 512" width="72" height="72" aria-hidden="true" style="border-radius:16px"><rect width="512" height="512" fill="#3466F6"/><path d="M248 172 C212 150 160 144 112 154 L112 356 C160 346 212 352 248 374 Z" fill="#fff"/><path d="M264 172 C300 150 352 144 400 154 L400 356 C352 346 300 352 264 374 Z" fill="#E3E9FB"/><rect x="336" y="150" width="30" height="104" fill="#F2A33A"/><polygon points="336,254 351,240 366,254" fill="#E3E9FB"/></svg>
+    <div><span class="en" style="color:#8FA8FF">STUDY LOG</span><h1 style="margin:4px 0 0;font-size:26px">ログイン</h1></div>
+    <form id="lf" style="display:flex;flex-direction:column;gap:12px">
+      <input class="field" type="email" name="email" autocomplete="username" placeholder="メールアドレス" required aria-label="メールアドレス">
+      <input class="field" type="password" name="pw" autocomplete="current-password" placeholder="パスワード" required aria-label="パスワード">
+      <div class="err">${esc(err)}</div>
+      <button class="btn primary block" type="submit">ログイン</button>
+    </form>
+    <span style="font-size:12px;color:var(--muted);line-height:1.6">アカウントはFirebaseの管理画面で作成したものを使います（手順書のステップ3）。</span>
+  </div>`;
+  document.getElementById('lf').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const f = ev.target, btn = f.querySelector('button'); btn.disabled = true; btn.textContent = 'ログイン中…';
+    try { await DB.authM.signInWithEmailAndPassword(DB.auth, f.email.value.trim(), f.pw.value); }
+    catch (e) { vLogin(e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found' ? 'メールアドレスまたはパスワードが違います' : 'ログインできませんでした（' + e.code + '）'); }
+  });
+}
+
+/* ---------- 起動 ---------- */
+(async function boot() {
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+  if (DEMO) { DB = LocalDB; startSync(); return; }
+  try {
+    DB = await FirebaseDB();
+    DB.authM.onAuthStateChanged(DB.auth, user => {
+      if (user) { if (S.user) return; S.user = user; S.email = user.email || ''; $app.innerHTML = '<div class="loading">データを読み込み中…</div>'; startSync(); }
+      else { S.user = null; vLogin(); }
+    });
+  } catch (e) {
+    console.error(e);
+    $app.innerHTML = `<div class="loading" style="flex-direction:column;gap:8px;padding:24px;text-align:center">Firebaseに接続できませんでした。<br>電波の良い場所で再度開いてください。<br><small>${esc(e.message)}</small></div>`;
+  }
+})();
+</script>
+</body>
+</html>

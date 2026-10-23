@@ -1,0 +1,13 @@
+{
+  "name": "STUDY LOG",
+  "short_name": "STUDY LOG",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0B111E",
+  "theme_color": "#0B111E",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
